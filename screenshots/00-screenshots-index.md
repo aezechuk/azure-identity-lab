@@ -25,7 +25,7 @@
 | # | Filename | What It Shows |
 |---|----------|---------------|
 | 14 | [14-rg-tags.png](14-rg-tags.png) | Tags applied to resource groups |
-| 15 | [15-security-defaults-disabled.png](15-security-defaults-disabled.png) | Security Defaults disabled in favor of Conditional Access |
+| 15 | 15-security-defaults-disabled N/A | Security Defaults disabled in favor of Conditional Access |
 | 16 | [16-conditional-access-policy-2.png](16-conditional-access-policy-2.png) | CA policy requiring MFA for all users with break-glass excluded |
 | 17 | [17-audit-logs.png](17-audit-logs.png) | Entra ID audit logs showing user and group activity |
 | 18 | [18-signin-logs.png](18-signin-logs.png) | Sign-in logs showing multiple user sign-ins |
