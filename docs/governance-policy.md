@@ -107,3 +107,21 @@ These policies are recommended for production environments where compute and sto
 ## Data Residency
 
 All resources are deployed to **East US** region. No cross-region replication is configured. This aligns with a single-region deployment model appropriate for a lab environment. Production environments should consider geo-redundancy based on business continuity requirements.
+
+---
+
+## What I'd Change in Production
+
+This governance model works at lab scale with one admin and six users. It wouldn't survive contact with a real organization. Here's what would need to change.
+
+**Governance would be defined as code, not configured by hand.** Every tag policy, RBAC assignment, and resource group in this lab was created manually or via one-off PowerShell scripts. In production this belongs in Terraform or Bicep — the tagging policy isn't a document people are supposed to remember, it's an enforced constraint baked into the module that creates the resource group. If a resource group can be created without the required tags, the governance policy doesn't actually exist, it's just a suggestion.
+
+**Policy enforcement would be Deny, not documentation.** The Azure Policy recommendations in this lab were intentionally left unassigned so they wouldn't block lab work. In production, "require a tag on resource groups" and "allowed locations" would be assigned as Deny at the subscription or management group level on day one — before any workload exists to be inconvenienced by them.
+
+**Access reviews would have named, accountable reviewers — not the same admin reviewing everything.** Right now I review my own infrastructure decisions, which isn't a real control. Department managers would own reviews for their own teams, with the platform admin reviewing only the platform-level privileged roles.
+
+**Tagging would be validated at deploy time, not checked after the fact.** A CI pipeline running `terraform plan` or `bicep build` with a policy-as-code check (Conftest, Checkov, or native Azure Policy compliance scan) catches a missing tag before the resource ever gets created. Catching it in a quarterly governance review means it's been non-compliant for up to three months.
+
+**Cost governance would extend beyond a single budget alert.** One $5 alert on the whole subscription tells you nothing about which department or workload is driving spend. Production cost governance ties tags to actual cost allocation reports, with budgets scoped per resource group or per cost center, not the subscription as a whole.
+
+**This governance policy itself would live in version control next to the infrastructure it governs**, not as a standalone markdown file maintained separately. Policy and the infrastructure it constrains should change together, reviewed in the same pull request, so they can't drift apart.
